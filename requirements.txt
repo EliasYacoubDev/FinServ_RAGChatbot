@@ -1,0 +1,17 @@
+# ── Web API ──────────────────────────────
+fastapi==0.111.0
+uvicorn[standard]==0.30.1
+requests
+python-dotenv
+
+# ── LangChain ecosystem (0.3-series) ────
+langchain==0.3.26          # ← latest that exists
+langchain-openai==0.3.26   # exact-match to avoid core mismatch
+langchain-weaviate==0.0.5  # still points to LC core >=0.3.*
+
+# ── Weaviate gRPC/HTTP client (v4) ───────
+weaviate-client==4.15.4    # satisfies langchain-weaviate
+
+# ── Utilities ───────────────────────────
+pdfminer.six
+scrapy

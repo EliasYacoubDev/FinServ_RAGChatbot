@@ -1,0 +1,47 @@
+# infra/docker-compose.dev.yml
+services:
+  weaviate:
+    image: semitechnologies/weaviate:1.24.10
+    container_name: weaviate
+    restart: unless-stopped
+
+    env_file: .env
+
+    environment:
+      AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: "true"
+      CLUSTER_HOSTNAME: finserv-rag
+      ENABLE_MODULES: text2vec-openai,generative-openai
+      GRPC_PORT: "50051"
+      OPENAI_APIKEY: ${OPENAI_API_KEY}
+
+    ports:
+      - "8080:8080"      # REST
+      - "50051:50051"    # gRPC
+
+    volumes:
+      - weaviate_data:/var/lib/weaviate
+
+    healthcheck:
+      # wget is included in the image
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:8080/v1/.well-known/ready || exit 1"]
+      interval: 20s
+      timeout: 10s
+      retries: 30
+      start_period: 40s     # (gives the modules time to download on first run)
+
+  app:
+    build:
+      context: ..
+      dockerfile: infra/Dockerfile
+
+    env_file: .env
+    depends_on:
+      weaviate:
+        condition: service_healthy
+
+    ports:
+      - "8000:8000"
+    restart: on-failure
+
+volumes:
+  weaviate_data:

@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+.env
+.env.example
+
+# VS Code
+.vscode/
+
+# Output & Data
+output/
+data/
+*.jl
+*.json
+*.db
+*.pkl
