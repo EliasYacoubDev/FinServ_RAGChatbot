@@ -42,5 +42,7 @@ jobs:
 
     - name: Push Docker image to GHCR
       run: |
-        docker tag finserv-rag:latest ghcr.io/${{ github.repository_owner }}/finserv-rag:latest
-        docker push ghcr.io/${{ github.repository_owner }}/finserv-rag:latest
+        IMAGE="ghcr.io/${{ github.repository_owner }}/finserv-rag:latest"
+        IMAGE_LOWER=$(echo "$IMAGE" | tr '[:upper:]' '[:lower:]')
+        docker tag finserv-rag:latest "$IMAGE_LOWER"
+        docker push "$IMAGE_LOWER"
